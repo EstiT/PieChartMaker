@@ -1,0 +1,105 @@
+@@ -0,0 +1,104 @@
+#Collier, R. "Lectures Notes for COMP1405B – Introduction to Computer Science I" [PDF document].
+#Retrieved from cuLearn: https://www.carleton.ca/culearn/ (Fall 2015).
+
+#Stephenson, B. "Tutorial 1: Drawing with the SimpleGraphics Library" [PDF document].
+#Retrieved from cuLearn: https://www.carleton.ca/culearn/ (Fall 2015).
+
+#Brunet, J. (Personal Communication, Oct. 2, 2015).
+
+#import functions that are used in program
+from math import *
+from random import randint 
+from SimpleGraphics import *
+
+#title
+print('------------------')
+print('Chart Creator Menu')
+print('------------------')
+
+
+counterA=0;counterB=0; #counters to keep track 
+title=input('Enter a title for the chart: ')#get title
+setFont("Arial", "25", "bold")#set title size
+text(400,100,title,'n')#display the title 
+legend=input('Do you want a legend or labels? (type "Legend" or "Labels")')
+while legend!="Legend" and legend!="Labels":
+    print("That is not one of the options")
+    legend=input('Do you want a legend or labels? (type "Legend" or "Labels")')
+
+sAngle=0#set initial start angle
+lblx=570; lbly=25#where the legend will be initially
+x3=0;y3=0 #initialize x and y variables for label coordinate
+
+#have the labels in the chart
+if legend=="Labels": 
+    sectors=int(input('Enter the number of sectors:'))
+    theta=0
+    total=int(input('Enter the total: '))
+    #run through loop for each sector
+    #get the label and value for each sector
+    for counterA in range (sectors):
+        label=input('Enter the label for sector '+str(counterA+1)+str(': '))
+        value=int(input('Enter the value for that sector: ')) 
+        #calculate end angle of each sector
+        eAngle=(value/total)*360 
+        #set colour for sector
+        setFill(randint(0,235),randint(0,235),randint(0,235)) 
+        pieSlice(250, 150, 300, 300, sAngle, eAngle)#draw sector
+        setFill("black");setFont("Arial", "14","italics")#format of the text/label
+        sAngle=sAngle+eAngle #increase counters for next slice 
+        counterA=counterA+1
+        counterB=counterB+value
+        x1=400;y1=300 #coordinates of origin
+        theta=(eAngle/2)-sAngle #calculate angle of triange within sector
+        theta=radians(theta)#convert the angle to radians
+        Hyp=150 #the hypotinus of the triange is the radius of the circle
+        Opp=Hyp*sin(theta) #calculate oppisite length of the triangle 
+        Adj=Hyp*cos(theta) #calculate adjacent length of the triangle 
+        #add the adjacent length to the x coordinate of the origin to            find the x value of where the label should go
+        x3=x1+Adj 
+        #repeat for y
+        y3=y1+Opp 
+        text(x3,y3,label)#print label     
+    
+        #if the total values dont equal the inputed total
+        if counterA==sectors and counterB!= total: 
+            print('Error! that does not add up')#error statement
+            break #end program
+
+#user wants a legend                
+elif legend=="Legend": 
+    #get number of sectors and total
+    sectors=int(input('Enter the number of sectors: '))
+    total=int(input('Enter the total: '))
+
+    #run through loop for each sector
+    #get label and value for each sector
+    for counterA in range (sectors):    
+        colour1=randint(0,235);colour2=randint(0,235);colour3=randint(0,235);
+        label=input('Enter the label for sector '+str(counterA+1)+str(': '))
+        value=int(input('Enter the value for that sector: '))
+        eAngle=(value/total)*360 #find the end angle of each sector 
+        setFill(colour1,colour2,colour3) #set the colour for the sectors
+        pieSlice(250, 150, 300, 300, sAngle, eAngle)#display the sector
+        setFill("black");setFont("Arial", "14","italics")#format labels
+        text(lblx,lbly,label,'nw')#print legend
+        setFill(colour1,colour2,colour3)#match the rectangle colour to the pie slice colour
+        rect(lblx-40,lbly-5,20,20)#draw a rectangle (color swatch) for the legend
+        lbly=lbly+20 #move the legend down a line
+        sAngle=sAngle+eAngle #change the next start angle
+        #increase counters for next sector
+        counterA=counterA+1
+        counterB=counterB+value
+    
+        #if the total values dont equal the inputed total
+        if counterA==sectors and counterB!= total:
+            print('Error! that does not add up')#error statement
+            break #end program
+
+
+
+
+
+else:
+   raise SystemExit #end program
